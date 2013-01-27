@@ -2,10 +2,24 @@
 
 class AddEmployeeCommand
   def initialize args
+    parse_args args
   end
 
   def execute
+    new_emp = Employee.new
+    new_emp.name = @params.name
+    new_emp.address = @params.address
+    new_emp.salary_type = @params.salary_type
+    new_emp.salary_unit = @params.salary_unit
+    new_emp.commissioned = @params.commissioned
+    new_emp.save
     return 0
+  end
+
+  private
+  def parse_args args
+    @params = AddEmployeeCommandParams.new(args)
+    @params.parse
   end
 end
 
@@ -36,7 +50,7 @@ class AddEmployeeCommandParams
     elsif ["S", "C"].include? salary_type
       @salary_type = SalaryType::MONTHLY
       if salary_type == "C"
-        @commissioned = @args[4]
+        @commissioned = @args[4].to_i
       end
     else
       raise InvalidSalaryTypeError
