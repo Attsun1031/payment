@@ -13,7 +13,6 @@ class AddEmployeeCommand
     new_emp.salary_unit = @params.salary_unit
     new_emp.commissioned = @params.commissioned
     new_emp.save
-    return 0
   end
 
   private

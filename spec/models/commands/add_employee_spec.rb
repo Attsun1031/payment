@@ -12,8 +12,7 @@ describe AddEmployeeCommand do
       end
 
       it "should add employee" do
-        result = @add_emp_command.execute()
-        result.should == 0
+        @add_emp_command.execute()
         added_emp = Employee.find_by_name("jon")
         added_emp.address.should == 'Tokyo'
         added_emp.salary_type.should == 0
