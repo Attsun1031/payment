@@ -1,5 +1,6 @@
 # coding: utf-8
 
+# 従業員追加コマンド
 class AddEmployeeCommand
   def initialize args
     parse_args args
@@ -22,6 +23,7 @@ class AddEmployeeCommand
   end
 end
 
+# 従業員追加コマンド用パラメータ
 class AddEmployeeCommandParams
   attr_reader :name, :address, :salary_type, :salary_unit, :commissioned
 
