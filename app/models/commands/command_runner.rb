@@ -1,5 +1,5 @@
 # coding: utf-8
-
+require 'add_employee'
 
 # コマンド実行クラス
 class CommandRunner
@@ -13,7 +13,7 @@ class CommandRunner
   # args :: コマンドライン引数
   # === Return
   # 終了コード :: 0 => 正常
-  def run args
+  def self.run args
     command = COMMAND_MAP[args[0].intern].new args[1..args.length]
     command.execute
     return 0

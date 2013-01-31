@@ -1,4 +1,5 @@
 # coding: utf-8
+require 'employee'
 
 # 従業員追加コマンド
 class AddEmployeeCommand
