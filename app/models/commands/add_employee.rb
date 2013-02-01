@@ -28,18 +28,32 @@ end
 class AddEmployeeCommandParams
   attr_reader :name, :address, :salary_type, :salary_unit, :commissioned
 
+  MIN_ARGUMENT_COUNT = 4
+
   def initialize args
     @args = args
   end
 
+  # 引数を解析する
   def parse
+    validate_args
+    do_parse
+  end
+
+  private
+
+  def validate_args
+    if @args.length < MIN_ARGUMENT_COUNT
+      raise InvalidArgumentsError, "Insufficient Arguments. arguments: %s" % @args
+    end
+  end
+
+  def do_parse
     @name = @args[0]
     @address = @args[1]
     @salary_unit = @args[3].to_i
     parse_salary_type
   end
-
-  private
 
   # 給料支払方法を決める
   # H => 時給
@@ -48,17 +62,24 @@ class AddEmployeeCommandParams
   def parse_salary_type
     salary_type = @args[2]
     if salary_type == "H"
-      @salary_type = SalaryType::HOURLY
+      @salary_type = Salary::HOURLY
+
     elsif ["S", "C"].include? salary_type
-      @salary_type = SalaryType::MONTHLY
+      @salary_type = Salary::MONTHLY
+
       if salary_type == "C"
+        if @args.length < 5
+          raise InvalidArgumentsError,
+            "Commissioned Employee specified, but no commissioned. arguments: %s" % @args
+        end
         @commissioned = @args[4].to_i
       end
+
     else
-      raise InvalidSalaryTypeError
+      raise Salary::InvalidSalaryTypeError
     end
   end
 end
 
-class InvalidSalaryTypeError < StandardError
+class InvalidArgumentsError < StandardError
 end

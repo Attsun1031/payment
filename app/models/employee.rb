@@ -5,7 +5,10 @@ class Employee < ActiveRecord::Base
   attr_accessible :address, :commissioned, :name, :payment_type, :salary_type, :salary_unit
 end
 
-module SalaryType
+module Salary
   HOURLY = 0
   MONTHLY = 1
+
+  class InvalidSalaryTypeError < StandardError
+  end
 end

@@ -34,7 +34,7 @@ describe AddEmployeeCommandParams do
       @param.parse
       @param.name.should == 'jon'
       @param.address.should == 'Tokyo'
-      @param.salary_type.should == SalaryType::HOURLY
+      @param.salary_type.should == Salary::HOURLY
       @param.salary_unit.should == 1000
       @param.commissioned.should == nil
     end
@@ -50,7 +50,7 @@ describe AddEmployeeCommandParams do
       @param.parse
       @param.name.should == 'tom'
       @param.address.should == 'Yokohama'
-      @param.salary_type.should == SalaryType::MONTHLY
+      @param.salary_type.should == Salary::MONTHLY
       @param.salary_unit.should == 300000
       @param.commissioned.should == nil
     end
@@ -66,22 +66,33 @@ describe AddEmployeeCommandParams do
       @param.parse
       @param.name.should == 'kate'
       @param.address.should == 'Kobe'
-      @param.salary_type.should == SalaryType::MONTHLY
+      @param.salary_type.should == Salary::MONTHLY
       @param.salary_unit.should == 200000
       @param.commissioned.should == 100000
     end
   end
 
   context "invalid salary type" do
-    before do
-      args = ['kate', 'Kobe', 'M', '200000', '100000']
-      @param = AddEmployeeCommandParams.new(args)
-    end
-
-    it "should parse params" do
+    it "should raise InvalidSalaryTypeError" do
       proc {
-        @param.parse
-      }.should raise_error(InvalidSalaryTypeError)
+        AddEmployeeCommandParams.new(['kate', 'Kobe', 'M', '200000', '100000']).parse
+      }.should raise_error(Salary::InvalidSalaryTypeError)
+    end
+  end
+
+  context "insufficient arguments" do
+    it "should raise InvalidArgumentsError" do
+      proc {
+        AddEmployeeCommandParams.new(['kate', 'Kobe', 'H']).parse
+      }.should raise_error(InvalidArgumentsError)
+    end
+  end
+
+  context "no commissioned" do
+    it "should raise InvalidArgumentsError" do
+      proc {
+        AddEmployeeCommandParams.new(['kate', 'Kobe', 'C', '100000']).parse
+      }.should raise_error(InvalidArgumentsError)
     end
   end
 end
