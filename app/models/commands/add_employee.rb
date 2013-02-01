@@ -4,10 +4,19 @@ require 'employee'
 # 従業員追加コマンド
 class AddEmployeeCommand
   def initialize args
+    log_name = File.join(Rails.root, 'log', '%s.log' % self.class.name)
+    @logger = ActiveSupport::BufferedLogger.new(log_name)
     parse_args args
   end
 
   def execute
+    @logger.info "START %s" % self.class.name
+    do_execute
+    @logger.info "END %s" % self.class.name
+  end
+
+  private
+  def do_execute
     new_emp = Employee.new
     new_emp.name = @params.name
     new_emp.address = @params.address
@@ -17,7 +26,6 @@ class AddEmployeeCommand
     new_emp.save
   end
 
-  private
   def parse_args args
     @params = AddEmployeeCommandParams.new(args)
     @params.parse

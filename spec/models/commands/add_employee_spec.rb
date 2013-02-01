@@ -4,15 +4,20 @@ require 'spec_helper'
 require 'commands/add_employee.rb'
 
 describe AddEmployeeCommand do
+  before do
+    @logger = mock(ActiveSupport::BufferedLogger)
+  end
   describe "execute" do
     context "success to add" do
-      before do
-        args = ['jon', 'Tokyo', 'H', '1000']
-        @add_emp_command = AddEmployeeCommand.new(args)
-      end
-
       it "should add employee" do
-        @add_emp_command.execute()
+        log_name = File.join(Rails.root, 'log', '%s.log' % AddEmployeeCommand.name)
+        ActiveSupport::BufferedLogger.should_receive(:new).with(log_name).and_return(@logger)
+        @logger.should_receive(:info).with("START %s" % AddEmployeeCommand.name)
+        @logger.should_receive(:info).with("END %s" % AddEmployeeCommand.name)
+
+        args = ['jon', 'Tokyo', 'H', '1000']
+        AddEmployeeCommand.new(args).execute
+
         added_emp = Employee.find_by_name("jon")
         added_emp.address.should == 'Tokyo'
         added_emp.salary_type.should == 0
