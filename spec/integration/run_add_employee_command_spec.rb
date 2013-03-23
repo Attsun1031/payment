@@ -8,7 +8,7 @@ describe CommandRunner do
       result.should == 0
       emp = Employee.find_by_name("田口")
       emp.address.should == "埼玉県熊谷市"
-      emp.salary_type.should == SalaryType::HOURLY
+      emp.salary_type.should == Salary::HOURLY
       emp.salary_unit.should == 1000
       emp.commissioned.should == nil
     end
@@ -20,7 +20,7 @@ describe CommandRunner do
       result.should == 0
       emp = Employee.find_by_name("田口")
       emp.address.should == "埼玉県熊谷市"
-      emp.salary_type.should == SalaryType::MONTHLY
+      emp.salary_type.should == Salary::MONTHLY
       emp.salary_unit.should == 200000
       emp.commissioned.should == nil
     end
@@ -32,7 +32,7 @@ describe CommandRunner do
       result.should == 0
       emp = Employee.find_by_name("田口")
       emp.address.should == "埼玉県熊谷市"
-      emp.salary_type.should == SalaryType::MONTHLY
+      emp.salary_type.should == Salary::MONTHLY
       emp.salary_unit.should == 200000
       emp.commissioned.should == 100000
     end

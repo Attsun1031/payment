@@ -1,55 +1,14 @@
 # coding: utf-8
 require 'employee'
-
-# 従業員追加コマンド
-class AddEmployeeCommand
-  def initialize args
-    log_name = File.join(Rails.root, 'log', '%s.log' % self.class.name)
-    @logger = ActiveSupport::BufferedLogger.new(log_name)
-    parse_args args
-  end
-
-  def execute
-    @logger.info "START %s" % self.class.name
-    do_execute
-    @logger.info "END %s" % self.class.name
-  end
-
-  private
-  def do_execute
-    new_emp = Employee.new
-    new_emp.name = @params.name
-    new_emp.address = @params.address
-    new_emp.salary_type = @params.salary_type
-    new_emp.salary_unit = @params.salary_unit
-    new_emp.commissioned = @params.commissioned
-    new_emp.save
-  end
-
-  def parse_args args
-    @params = AddEmployeeCommandParams.new(args)
-    @params.parse
-  end
-end
+require 'command_base'
 
 # 従業員追加コマンド用パラメータ
-class AddEmployeeCommandParams
+class AddEmployeeCommandParams < CommandParamsBase
   attr_reader :name, :address, :salary_type, :salary_unit, :commissioned
 
   MIN_ARGUMENT_COUNT = 4
 
-  def initialize args
-    @args = args
-  end
-
-  # 引数を解析する
-  def parse
-    validate_args
-    do_parse
-  end
-
-  private
-
+  protected
   def validate_args
     if @args.length < MIN_ARGUMENT_COUNT
       raise InvalidArgumentsError, "Insufficient Arguments. arguments: %s" % @args
@@ -91,3 +50,20 @@ end
 
 class InvalidArgumentsError < StandardError
 end
+
+# 従業員追加コマンド
+class AddEmployeeCommand < CommandBase
+
+  COMMAND_PARAM_CLASS = AddEmployeeCommandParams
+  protected
+  def do_execute
+    new_emp = Employee.new
+    new_emp.name = @params.name
+    new_emp.address = @params.address
+    new_emp.salary_type = @params.salary_type
+    new_emp.salary_unit = @params.salary_unit
+    new_emp.commissioned = @params.commissioned
+    new_emp.save
+  end
+end
+
