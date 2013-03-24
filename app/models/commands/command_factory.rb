@@ -1,11 +1,13 @@
 # coding: utf-8
 require 'add_employee'
 require 'delete_employee'
+require 'record_timecard'
 
 module CommandFactory
   COMMAND_MAP = {
     :AddEmp => AddEmployeeCommand,
-    :DelEmp => DeleteEmployeeCommand
+    :DelEmp => DeleteEmployeeCommand,
+    :Timecard => RecordTimecardCommand
   }
 
   def self.create_command args

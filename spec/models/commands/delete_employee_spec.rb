@@ -19,6 +19,7 @@ describe DeleteEmployeeCommand do
         args = ['1']
         Employee.should_receive(:find_by_id).with(1).and_return(@employee)
         @employee.should_receive(:destroy)
+
         DeleteEmployeeCommand.new(args).execute
       end
     end
